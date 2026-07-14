@@ -87,20 +87,20 @@
   },
   {
     "date": "2026-07-14",
-    "collected": 76,
+    "collected": 68,
     "duplicates_removed": 14,
-    "negative_blocked": 8,
+    "negative_blocked": 14,
     "hard_blocked": 0,
-    "ai_blocked": 8,
-    "final_published": 54,
+    "ai_blocked": 14,
+    "final_published": 40,
     "by_category": {
       "상위기관 뉴스": 0,
       "배출 저감사업 뉴스": 3,
       "전기·수소차 뉴스 - 협회 사업 관련 뉴스": 7,
-      "전기·수소차 뉴스 - 업계 동향": 6,
+      "전기·수소차 뉴스 - 업계 동향": 4,
       "한국자동차환경협회 뉴스": 3,
       "기타 뉴스": 8,
-      "회원사 뉴스": 4
+      "회원사 뉴스": 3
     }
   }
 ]
