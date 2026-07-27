@@ -47,7 +47,10 @@ jobs:
         run: pip install requests anthropic python-dotenv
 
       # 1) 스티비 발송분을 웹진 데이터로 변환
+      #    변환 건수를 outputs.converted 로 넘겨, 0건이면 뒤 단계를 건너뛴다.
+      #    (메일을 못 찾았는데 웹진 재생성에서 실패해 원인이 가려지는 것을 막기 위함)
       - name: 스티비 발행분 가져오기
+        id: fetch
         env:
           STIBEE_API_KEY: ${{ secrets.STIBEE_API_KEY }}
           STIBEE_SUBJECT_FILTER: ${{ secrets.STIBEE_SUBJECT_FILTER }}
@@ -68,14 +71,25 @@ jobs:
             python stibee_mirror.py
           fi
 
-      # 2) 웹진·대시보드 재생성 (스티비 발행분 기준)
+      # 2) 변환된 게 없으면 여기서 안내하고 정상 종료
+      - name: 변환 결과 확인
+        if: steps.fetch.outputs.converted == '0'
+        run: |
+          echo "::notice::변환된 메일이 없어 웹진을 갱신하지 않았습니다."
+          echo "위 '스티비 발행분 가져오기' 단계의 로그에서 원인을 확인하세요."
+          echo "  · 제목 규칙이 안 맞으면 → 실제 발송 제목이 로그에 표시됩니다"
+          echo "  · 발송 완료된 메일이 없으면 → 담당자 발송 여부를 확인하세요"
+
+      # 3) 웹진·대시보드 재생성 (스티비 발행분 기준)
       - name: 웹진 재생성
+        if: steps.fetch.outputs.converted != '0'
         env:
           WEBZINE_SOURCE: stibee
         run: python generate.py
 
-      # 3) 결과 반영
+      # 4) 결과 반영
       - name: 결과 저장소에 반영
+        if: steps.fetch.outputs.converted != '0'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
