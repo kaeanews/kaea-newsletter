@@ -1,0 +1,88 @@
+name: 스티비 발행분 웹진 반영 (수동)
+
+# 담당자가 스티비에서 뉴스레터를 발송한 뒤, 이 워크플로우를 수동으로 실행하면
+# 발송된 메일을 가져와 웹진과 대시보드에 반영한다.
+#
+# 흐름:
+#   stibee_mirror.py  스티비 발송분 → mail_data/날짜.json 변환
+#   generate.py       웹진·대시보드 재생성 (WEBZINE_SOURCE=stibee)
+#   커밋              GitHub Pages 반영
+#
+# ※ 자동 수집(daily.yml)은 그대로 돌아가며 data/ 에 쌓인다.
+#   수집 성능이 만족스러워지면 WEBZINE_SOURCE 를 auto 로 바꿔 되돌리면 된다.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '변환 범위'
+        required: true
+        default: '최신 1건'
+        type: choice
+        options:
+          - '최신 1건'
+          - '아직 변환 안 된 것 전부'
+      email_id:
+        description: '(선택) 특정 이메일 ID만 변환할 때 입력'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 라이브러리 설치
+        run: pip install requests anthropic python-dotenv
+
+      # 1) 스티비 발송분을 웹진 데이터로 변환
+      - name: 스티비 발행분 가져오기
+        env:
+          STIBEE_API_KEY: ${{ secrets.STIBEE_API_KEY }}
+          STIBEE_SUBJECT_FILTER: ${{ secrets.STIBEE_SUBJECT_FILTER }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODE: ${{ inputs.mode }}
+          EMAIL_ID: ${{ inputs.email_id }}
+        run: |
+          if [ -n "$EMAIL_ID" ]; then
+            # 숫자인지 확인 (잘못된 값이 그대로 넘어가지 않도록)
+            if ! echo "$EMAIL_ID" | grep -Eq '^[0-9]+$'; then
+              echo "[오류] 이메일 ID는 숫자여야 합니다: $EMAIL_ID"
+              exit 1
+            fi
+            python stibee_mirror.py --email "$EMAIL_ID"
+          elif [ "$MODE" = "아직 변환 안 된 것 전부" ]; then
+            python stibee_mirror.py --all
+          else
+            python stibee_mirror.py
+          fi
+
+      # 2) 웹진·대시보드 재생성 (스티비 발행분 기준)
+      - name: 웹진 재생성
+        env:
+          WEBZINE_SOURCE: stibee
+        run: python generate.py
+
+      # 3) 결과 반영
+      - name: 결과 저장소에 반영
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "변경 사항 없음 - 커밋 생략"
+          else
+            git commit -m "수동: 스티비 발행분 웹진 반영"
+            git push
+          fi
