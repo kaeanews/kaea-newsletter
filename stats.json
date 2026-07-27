@@ -321,20 +321,20 @@
   },
   {
     "date": "2026-07-27",
-    "collected": 70,
-    "duplicates_removed": 15,
-    "negative_blocked": 6,
+    "collected": 40,
+    "duplicates_removed": 9,
+    "negative_blocked": 23,
     "hard_blocked": 1,
-    "ai_blocked": 5,
-    "final_published": 49,
+    "ai_blocked": 22,
+    "final_published": 8,
     "by_category": {
-      "상위기관 뉴스": 2,
+      "상위기관 뉴스": 0,
       "배출 저감사업 뉴스": 2,
-      "전기·수소차 뉴스 - 협회 사업 관련 뉴스": 5,
-      "전기·수소차 뉴스 - 업계 동향": 6,
-      "한국자동차환경협회 뉴스": 1,
-      "기타 뉴스": 5,
-      "회원사 뉴스": 4
+      "전기·수소차 뉴스 - 협회 사업 관련 뉴스": 0,
+      "전기·수소차 뉴스 - 업계 동향": 1,
+      "한국자동차환경협회 뉴스": 0,
+      "기타 뉴스": 2,
+      "회원사 뉴스": 3
     }
   }
 ]
