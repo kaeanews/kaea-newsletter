@@ -1,87 +1,74 @@
-name: 매일 웹진 자동 생성
+name: 뉴스 수집 (수동 · 성능 관찰용)
 
-# 언제 실행할지
+# ⚠️ 이 워크플로우는 웹진을 만들지 않습니다.
+#
+# 현재 웹진은 '스티비 미러 방식'으로 운영됩니다.
+#   담당자가 스티비에서 발송 → mirror.yml 을 수동 실행 → 웹진 갱신
+#
+# 이 워크플로우는 자동 수집(collect.py)과 필터(filter.py)만 돌려
+# data/ 와 stats.json 에 결과를 쌓습니다.
+# 수집 성능이 얼마나 좋아졌는지 확인하는 용도입니다.
+#
+# 자동 실행(스케줄)은 꺼져 있습니다. 필요할 때 Actions 탭에서 수동으로 돌리세요.
+#
+# ── 나중에 자동 수집 방식으로 되돌릴 때 ─────────────────────────
+#   1) 아래 주석 처리된 schedule 블록을 되살린다
+#   2) 하단의 '웹진 생성 실행' 단계를 되살린다
+#   3) Secrets 의 WEBZINE_SOURCE 를 auto 로 바꾸거나 삭제한다
+# ───────────────────────────────────────────────────────────────
 on:
-  schedule:
-    # GitHub Actions 스케줄은 정시 실행이 보장되지 않아(지연·누락) 세 번 시도한다.
-    # 셋 중 하나라도 실행되면 그날 웹진이 생성되고, 이미 생성됐으면 이후 시도는 건너뛴다.
-    #
-    # timezone 필드(2026-03 지원)로 KST를 직접 지정한다. UTC 변환이 필요 없다.
-    # 분(minute)을 15로 둔 이유: 정각(0분)은 전 세계 스케줄이 몰려 지연이 심하므로 피한다.
-    - cron: '15 5 * * *'
-      timezone: 'Asia/Seoul'   # KST 05:15
-    - cron: '15 6 * * *'
-      timezone: 'Asia/Seoul'   # KST 06:15
-    - cron: '15 7 * * *'
-      timezone: 'Asia/Seoul'   # KST 07:15
-  workflow_dispatch:            # Actions 탭에서 수동 실행도 가능
+  # schedule:
+  #   - cron: '15 5 * * *'
+  #     timezone: 'Asia/Seoul'   # KST 05:15
+  #   - cron: '15 6 * * *'
+  #     timezone: 'Asia/Seoul'   # KST 06:15
+  #   - cron: '15 7 * * *'
+  #     timezone: 'Asia/Seoul'   # KST 07:15
+  workflow_dispatch:            # Actions 탭에서 수동 실행
 
-# 생성 결과를 저장소에 자동 저장(커밋)하기 위한 쓰기 권한
+# 수집 결과를 저장소에 저장(커밋)하기 위한 쓰기 권한
 permissions:
   contents: write
 
 jobs:
-  build:
+  collect:
     runs-on: ubuntu-latest
 
     steps:
-      # 1) 저장소 코드 가져오기
       - name: 저장소 코드 가져오기
         uses: actions/checkout@v4
 
-      # 2) 오늘(KST) 웹진이 이미 생성됐는지 확인 (중복 방지)
-      #    news/YYYY-MM-DD.html (오늘 KST 날짜)이 이미 있으면 이후 단계를 건너뛴다.
-      #    → 5:15에 생성됐으면 6:15·7:15 시도는 수집·필터·생성을 모두 건너뛰어
-      #      네이버/Claude API 낭비와 중복 커밋을 막는다.
-      #    단, 수동 실행(workflow_dispatch)은 항상 진행한다.
-      - name: 오늘 생성 여부 확인
-        id: check
-        run: |
-          TODAY=$(TZ=Asia/Seoul date +%Y-%m-%d)
-          echo "오늘(KST): $TODAY"
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ -f "news/$TODAY.html" ]; then
-            echo "이미 오늘 웹진이 생성되어 있습니다. 이후 단계를 건너뜁니다."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "오늘 웹진 생성을 진행합니다."
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      # 3) 파이썬 설치
       - name: 파이썬 설치
-        if: steps.check.outputs.skip == 'false'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 4) 필요한 라이브러리 설치
       - name: 라이브러리 설치
-        if: steps.check.outputs.skip == 'false'
         run: pip install requests python-dotenv anthropic
 
-      # 5) 뉴스 수집 (STEP 1)
+      # 1) 뉴스 수집 (STEP 1) → data/날짜.json
       - name: 뉴스 수집 실행
-        if: steps.check.outputs.skip == 'false'
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
         run: python collect.py
 
-      # 6) 부정 뉴스 필터링 + 요약 (STEP 2)
+      # 2) 중복 제거 + 부정 필터 + 중요도 선별 + 요약 (STEP 2) → stats.json 누적
       - name: 부정 필터링 및 요약 실행
-        if: steps.check.outputs.skip == 'false'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python filter.py
 
-      # 7) 웹진 + 대시보드 생성 (STEP 3)
-      - name: 웹진 생성 실행
-        if: steps.check.outputs.skip == 'false'
-        run: python generate.py
+      # ※ 웹진 생성은 하지 않습니다.
+      #   스티비 미러 방식에서는 mirror.yml 이 웹진과 대시보드를 만듭니다.
+      #   여기서 generate.py 를 돌리면 웹진이 자동 수집분으로 덮어써집니다.
+      #
+      #   [되돌릴 때] 아래 두 줄의 주석을 풀면 자동 수집 방식으로 웹진이 생성됩니다.
+      # - name: 웹진 생성 실행
+      #   run: python generate.py
 
-      # 8) 생성 결과를 저장소에 반영 (변경 있을 때만 커밋)
-      - name: 생성 결과 저장소에 반영
-        if: steps.check.outputs.skip == 'false'
+      # 3) 수집 결과를 저장소에 반영 (변경 있을 때만 커밋)
+      - name: 수집 결과 저장소에 반영
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -89,6 +76,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "변경 사항 없음 - 커밋 생략"
           else
-            git commit -m "자동 생성: 웹진 업데이트"
+            git commit -m "수동: 뉴스 수집 결과 갱신 (성능 관찰용)"
             git push
           fi
