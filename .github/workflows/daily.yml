@@ -51,6 +51,9 @@ jobs:
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          # 후보가 정원보다 많을 때 AI가 1차 선별한다.
+          # 키가 없으면 기존 균등 배분으로 동작하므로 안전하다.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python collect.py
 
       # 2) 중복 제거 + 부정 필터 + 중요도 선별 + 요약 (STEP 2) → stats.json 누적
