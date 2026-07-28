@@ -3,6 +3,10 @@ name: 스티비 발행분 웹진 반영 (수동)
 # 담당자가 스티비에서 뉴스레터를 발송한 뒤, 이 워크플로우를 수동으로 실행하면
 # 발송된 메일을 가져와 웹진과 대시보드에 반영한다.
 #
+# 가져오는 방법이 두 가지다.
+#   ① 링크 모드  : '웹에서 보기' 링크를 입력란에 붙여넣는다. 요금제 제약 없음.
+#   ② API 모드   : 입력란을 비우면 이메일 API로 자동 조회. 스티비 프로 요금제 필요.
+#
 # 흐름:
 #   stibee_mirror.py  스티비 발송분 → mail_data/날짜.json 변환
 #   generate.py       웹진·대시보드 재생성 (WEBZINE_SOURCE=stibee)
@@ -13,8 +17,18 @@ name: 스티비 발행분 웹진 반영 (수동)
 on:
   workflow_dispatch:
     inputs:
+      share_url:
+        description: "스티비 '웹에서 보기' 링크 (프로 요금제 아닐 때 이걸 쓰세요)"
+        required: false
+        default: ''
+        type: string
+      share_date:
+        description: '(선택) 발행일 YYYY-MM-DD. 비우면 메일 내용에서 자동 인식'
+        required: false
+        default: ''
+        type: string
       mode:
-        description: '변환 범위'
+        description: '변환 범위 (링크를 넣으면 무시됨)'
         required: true
         default: '최신 1건'
         type: choice
@@ -57,8 +71,18 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MODE: ${{ inputs.mode }}
           EMAIL_ID: ${{ inputs.email_id }}
+          SHARE_URL: ${{ inputs.share_url }}
+          SHARE_DATE: ${{ inputs.share_date }}
         run: |
-          if [ -n "$EMAIL_ID" ]; then
+          # ① 링크 모드 — 프로 요금제가 없어도 동작한다
+          if [ -n "$SHARE_URL" ]; then
+            if [ -n "$SHARE_DATE" ]; then
+              python stibee_mirror.py --url "$SHARE_URL" --date "$SHARE_DATE"
+            else
+              python stibee_mirror.py --url "$SHARE_URL"
+            fi
+          # ② API 모드 — 프로 요금제 필요
+          elif [ -n "$EMAIL_ID" ]; then
             # 숫자인지 확인 (잘못된 값이 그대로 넘어가지 않도록)
             if ! echo "$EMAIL_ID" | grep -Eq '^[0-9]+$'; then
               echo "[오류] 이메일 ID는 숫자여야 합니다: $EMAIL_ID"
