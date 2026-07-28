@@ -1,0 +1,90 @@
+name: 수집 성능 측정 (수동)
+
+# 담당자가 실제로 발행한 뉴스레터(정답지)와 우리 자동 수집 결과를 비교해
+# 성능을 숫자로 보여줍니다.
+#
+# 키워드(keywords.py)나 판정 기준(filter.py)을 고친 뒤 이걸 돌리면
+# 재현율이 올랐는지 바로 확인할 수 있습니다.
+#
+# ⚠️ 웹진은 건드리지 않습니다.
+#    웹진은 mirror.yml 이 mail_data/ 로 만들고, 이 워크플로우는 data/ 만 씁니다.
+#
+# 비교 기준
+#   mail_data/*.json  담당자 발행분 → 정답지
+#   data/*.json       자동 수집분   → 테스트 결과
+#   ※ 파일 날짜가 아니라 '기사 발행일' 기준으로 맞춰 비교합니다.
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '실행 범위'
+        required: true
+        default: '수집부터 다시'
+        type: choice
+        options:
+          - '수집부터 다시'
+          - '비교만 (기존 수집 결과 사용)'
+      days:
+        description: '최근 며칠치 발행일을 비교할지 (기본 3)'
+        required: false
+        default: '3'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 라이브러리 설치
+        run: pip install requests python-dotenv anthropic
+
+      # 1) 뉴스 수집 (선택)
+      - name: 뉴스 수집 실행
+        if: ${{ inputs.mode == '수집부터 다시' }}
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+        run: python collect.py
+
+      # 2) 필터·중요도 선별 (선택)
+      - name: 부정 필터링 및 요약 실행
+        if: ${{ inputs.mode == '수집부터 다시' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python filter.py
+
+      # 3) 성능 비교 리포트
+      - name: 성능 비교 리포트
+        env:
+          DAYS: ${{ inputs.days }}
+        run: |
+          # 숫자가 아니면 기본값 3 을 쓴다
+          if ! echo "$DAYS" | grep -Eq '^[0-9]+$'; then
+            echo "[안내] days 값이 숫자가 아니어서 기본값 3 을 사용합니다: $DAYS"
+            DAYS=3
+          fi
+          python compare.py --days "$DAYS"
+
+      # 4) 리포트를 저장소에 남겨 이력으로 추적
+      - name: 리포트 저장소에 반영
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "변경 사항 없음 - 커밋 생략"
+          else
+            git commit -m "수동: 수집 성능 리포트"
+            git push
+          fi
