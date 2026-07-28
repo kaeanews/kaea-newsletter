@@ -7,7 +7,9 @@ name: 웹진 재생성 (수동)
 #    (이 워크플로우는 generate.py 만 실행하므로 수집을 다시 하지 않는다)
 #
 # 사용법:
-#   1) data/YYYY-MM-DD.json 에서 지울 기사를 제거하고 커밋
+#   1) 기사 데이터에서 지울 기사를 제거하고 커밋
+#      · 스티비 미러 방식(현재)  → mail_data/YYYY-MM-DD.json
+#      · 자동 수집 방식          → data/YYYY-MM-DD.json
 #   2) Actions → "웹진 재생성 (수동)" → Run workflow
 #      · 오늘 기사를 지웠다면 → 날짜 칸을 비우고 실행
 #      · 과거 기사를 지웠다면 → 날짜 칸에 그 날짜(예: 2026-07-10) 입력
@@ -47,16 +49,31 @@ jobs:
         if: ${{ inputs.date != '' }}
         env:
           TARGET_DATE: ${{ inputs.date }}
+          # 웹진을 어느 데이터로 만들지 지정한다.
+          # Secrets 에 WEBZINE_SOURCE 가 없으면 stibee(현재 운영 방식)로 동작한다.
+          WEBZINE_SOURCE: ${{ secrets.WEBZINE_SOURCE }}
         run: |
+          export WEBZINE_SOURCE="${WEBZINE_SOURCE:-stibee}"
+          echo "웹진 소스: $WEBZINE_SOURCE"
+
           # 날짜 형식 확인 (YYYY-MM-DD 가 아니면 중단)
           if ! echo "$TARGET_DATE" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
             echo "[오류] 날짜 형식이 올바르지 않습니다: $TARGET_DATE (예: 2026-07-10)"
             exit 1
           fi
-          if [ ! -f "data/$TARGET_DATE.json" ]; then
-            echo "[오류] 해당 날짜 데이터가 없습니다: data/$TARGET_DATE.json"
+
+          # 소스에 맞는 폴더에서 데이터를 찾는다
+          if [ "$WEBZINE_SOURCE" = "stibee" ]; then
+            DATA_FOLDER="mail_data"
+          else
+            DATA_FOLDER="data"
+          fi
+          if [ ! -f "$DATA_FOLDER/$TARGET_DATE.json" ]; then
+            echo "[오류] 해당 날짜 데이터가 없습니다: $DATA_FOLDER/$TARGET_DATE.json"
+            echo "  현재 소스는 '$WEBZINE_SOURCE' 입니다. 다른 소스의 날짜를 넣지 않았는지 확인하세요."
             exit 1
           fi
+
           echo "지정 날짜 재생성: $TARGET_DATE"
           python generate.py "$TARGET_DATE"
 
@@ -64,8 +81,11 @@ jobs:
       #    generate.py 는 인자가 없으면 data 폴더의 가장 최근 날짜를 사용한다.
       #    대시보드도 이 단계에서 함께 다시 만들어진다.
       - name: 최신 웹진·대시보드 재생성
+        env:
+          WEBZINE_SOURCE: ${{ secrets.WEBZINE_SOURCE }}
         run: |
-          echo "최신 날짜로 index.html / dashboard.html 재생성"
+          export WEBZINE_SOURCE="${WEBZINE_SOURCE:-stibee}"
+          echo "최신 날짜로 index.html / dashboard.html 재생성 (소스: $WEBZINE_SOURCE)"
           python generate.py
 
       # 3) 결과를 저장소에 반영 (변경 있을 때만 커밋)
