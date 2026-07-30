@@ -40,6 +40,7 @@ on:
         options:
           - '최신 1건'
           - '아직 변환 안 된 것 전부'
+          - '목록만 확인 (변환 안 함)'
       email_id:
         description: '(선택) 특정 이메일 ID만 변환할 때 입력'
         required: false
@@ -65,11 +66,27 @@ jobs:
       - name: 라이브러리 설치
         run: pip install requests anthropic python-dotenv
 
+      # 0) 목록만 확인하는 진단 모드
+      #    어떤 메일이 있는지 제목만 훑어본다. 변환·비용이 발생하지 않는다.
+      - name: 발송 메일 목록 확인
+        if: ${{ inputs.mode == '목록만 확인 (변환 안 함)' }}
+        env:
+          STIBEE_API_KEY: ${{ secrets.STIBEE_API_KEY }}
+          STIBEE_SUBJECT_FILTER: ${{ secrets.STIBEE_SUBJECT_FILTER }}
+          SINCE: ${{ inputs.since }}
+        run: |
+          if [ -n "$SINCE" ]; then
+            python stibee_list.py --since "$SINCE"
+          else
+            python stibee_list.py
+          fi
+
       # 1) 스티비 발송분을 웹진 데이터로 변환
       #    변환 건수를 outputs.converted 로 넘겨, 0건이면 뒤 단계를 건너뛴다.
       #    (메일을 못 찾았는데 웹진 재생성에서 실패해 원인이 가려지는 것을 막기 위함)
       - name: 스티비 발행분 가져오기
         id: fetch
+        if: ${{ inputs.mode != '목록만 확인 (변환 안 함)' }}
         env:
           STIBEE_API_KEY: ${{ secrets.STIBEE_API_KEY }}
           STIBEE_SUBJECT_FILTER: ${{ secrets.STIBEE_SUBJECT_FILTER }}
