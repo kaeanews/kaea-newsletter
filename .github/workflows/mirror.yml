@@ -27,6 +27,11 @@ on:
         required: false
         default: ''
         type: string
+      since:
+        description: '(선택) 이 날짜 이후 발송분만. 예: 2026-06-01. 비우면 전부'
+        required: false
+        default: ''
+        type: string
       mode:
         description: '변환 범위 (링크를 넣으면 무시됨)'
         required: true
@@ -73,6 +78,7 @@ jobs:
           EMAIL_ID: ${{ inputs.email_id }}
           SHARE_URL: ${{ inputs.share_url }}
           SHARE_DATE: ${{ inputs.share_date }}
+          SINCE: ${{ inputs.since }}
         run: |
           # ① 링크 모드 — 프로 요금제가 없어도 동작한다
           if [ -n "$SHARE_URL" ]; then
@@ -89,10 +95,22 @@ jobs:
               exit 1
             fi
             python stibee_mirror.py --email "$EMAIL_ID"
-          elif [ "$MODE" = "아직 변환 안 된 것 전부" ]; then
-            python stibee_mirror.py --all
           else
-            python stibee_mirror.py
+            # 시작 날짜(선택) 검증
+            SINCE_ARG=""
+            if [ -n "$SINCE" ]; then
+              if ! echo "$SINCE" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+                echo "[오류] 날짜 형식이 올바르지 않습니다: $SINCE (예: 2026-06-01)"
+                exit 1
+              fi
+              SINCE_ARG="--since $SINCE"
+            fi
+
+            if [ "$MODE" = "아직 변환 안 된 것 전부" ]; then
+              python stibee_mirror.py --all $SINCE_ARG
+            else
+              python stibee_mirror.py $SINCE_ARG
+            fi
           fi
 
       # 2) 변환된 게 없으면 여기서 안내하고 정상 종료
