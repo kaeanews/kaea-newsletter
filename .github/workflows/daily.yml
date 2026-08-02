@@ -17,6 +17,17 @@ name: 뉴스 수집 (수동 · 성능 관찰용)
 #   3) Secrets 의 WEBZINE_SOURCE 를 auto 로 바꾸거나 삭제한다
 # ───────────────────────────────────────────────────────────────
 on:
+  workflow_dispatch:
+    inputs:
+      update_dashboard:
+        description: '수집 후 대시보드도 갱신할지 (웹진은 그대로 유지됩니다)'
+        required: true
+        default: '아니오 (수집만)'
+        type: choice
+        options:
+          - '아니오 (수집만)'
+          - '예 (대시보드만 자동수집 결과로 갱신)'
+
   # schedule:
   #   - cron: '15 5 * * *'
   #     timezone: 'Asia/Seoul'   # KST 05:15
@@ -24,7 +35,6 @@ on:
   #     timezone: 'Asia/Seoul'   # KST 06:15
   #   - cron: '15 7 * * *'
   #     timezone: 'Asia/Seoul'   # KST 07:15
-  workflow_dispatch:            # Actions 탭에서 수동 실행
 
 # 수집 결과를 저장소에 저장(커밋)하기 위한 쓰기 권한
 permissions:
@@ -61,6 +71,15 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python filter.py
+
+      # 3) (선택) 대시보드만 자동 수집 결과로 갱신
+      #    --dashboard-only 라서 index.html·news·검색은 건드리지 않는다.
+      #    WEBZINE_SOURCE=auto 로 data/ 를 읽는다.
+      - name: 대시보드 갱신 (웹진은 유지)
+        if: ${{ inputs.update_dashboard == '예 (대시보드만 자동수집 결과로 갱신)' }}
+        env:
+          WEBZINE_SOURCE: auto
+        run: python generate.py --dashboard-only
 
       # ※ 웹진 생성은 하지 않습니다.
       #   스티비 미러 방식에서는 mirror.yml 이 웹진과 대시보드를 만듭니다.
