@@ -401,16 +401,30 @@ def scan_global():
             key = y * 10000 + mo * 100 + 99
 
         # 원본을 읽어 정리본을 만든다. 실패하면 원본을 그대로 연다.
+        # ⚠️ 이미 완성된 정리본(스티비 메일에서 만든 것)은 다시 변환하지 않는다.
+        #    다시 변환하면 우리 템플릿을 워드 저장본으로 오인해 내용이 망가진다.
         target = fname
         try:
             with open(path, "r", encoding="utf-8", errors="ignore") as f:
                 raw = f.read()
-            page = global_convert.convert(raw, title, sub)
-            if page:
-                with open(os.path.join(view_dir, fname), "w", encoding="utf-8") as f:
-                    f.write(page)
+
+            already_made = "KAEA NEWSLETTER" in raw and "웹진으로 돌아가기" in raw
+            view_path = os.path.join(view_dir, fname)
+
+            if already_made:
+                # 완성본이므로 그대로 정리본 자리에 둔다
+                if not os.path.exists(view_path) or \
+                   open(view_path, "r", encoding="utf-8", errors="ignore").read() != raw:
+                    with open(view_path, "w", encoding="utf-8") as f:
+                        f.write(raw)
                 target = f"view/{fname}"
-                converted += 1
+            else:
+                page = global_convert.convert(raw, title, sub)
+                if page:
+                    with open(view_path, "w", encoding="utf-8") as f:
+                        f.write(page)
+                    target = f"view/{fname}"
+                    converted += 1
         except Exception as ex:
             print(f"      [해외뉴스 정리 실패 - 원본 사용] {fname}: {ex}")
 
