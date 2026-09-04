@@ -1,0 +1,82 @@
+name: 해외뉴스 반영 (수동)
+
+# 협회가 스티비로 발행한 '해외 기관 및 시장 동향 뉴스레터'를
+# 웹진 해외뉴스 탭에 반영합니다.
+#
+# 담당자가 이미 한국어로 번역·요약을 끝낸 상태라 AI 호출이 없습니다.
+# 비용 0원, 처리 즉시.
+#
+# 사용법
+#   1) 스티비에서 해당 뉴스레터의 '웹에서 보기' 링크를 복사
+#   2) Actions → 이 워크플로우 → Run workflow → 링크 붙여넣기
+on:
+  workflow_dispatch:
+    inputs:
+      share_url:
+        description: "스티비 '웹에서 보기' 링크 (필수)"
+        required: true
+        type: string
+      date:
+        description: '(선택) 발행일 YYYY-MM-DD. 비우면 메일에 적힌 날짜 사용'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  global:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 저장소 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 라이브러리 설치
+        run: pip install requests
+
+      # 1) 스티비 메일 → 해외뉴스 페이지 변환
+      - name: 해외뉴스 변환
+        id: conv
+        env:
+          SHARE_URL: ${{ inputs.share_url }}
+          DATE: ${{ inputs.date }}
+        run: |
+          if [ -n "$DATE" ]; then
+            if ! echo "$DATE" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+              echo "[오류] 날짜 형식이 올바르지 않습니다: $DATE (예: 2026-08-21)"
+              exit 1
+            fi
+            python global_stibee.py "$SHARE_URL" --date "$DATE"
+          else
+            python global_stibee.py "$SHARE_URL"
+          fi
+
+      # 2) 웹진 재생성 (해외뉴스 목록에 반영)
+      #    Secrets 에 WEBZINE_SOURCE 가 없으면 stibee(현재 운영 방식)로 동작한다.
+      - name: 웹진 재생성
+        env:
+          WEBZINE_SOURCE: ${{ secrets.WEBZINE_SOURCE }}
+        run: |
+          export WEBZINE_SOURCE="${WEBZINE_SOURCE:-stibee}"
+          echo "웹진 소스: $WEBZINE_SOURCE"
+          python generate.py
+
+      # 3) 결과 반영
+      - name: 결과 저장소에 반영
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "변경 사항 없음 - 커밋 생략"
+          else
+            git commit -m "수동: 해외뉴스 반영"
+            git push
+          fi
