@@ -15,6 +15,18 @@ name: 스티비 발행분 웹진 반영 (수동)
 # ※ 자동 수집(daily.yml)은 그대로 돌아가며 data/ 에 쌓인다.
 #   수집 성능이 만족스러워지면 WEBZINE_SOURCE 를 auto 로 바꿔 되돌리면 된다.
 on:
+  # ── 자동 실행 ──────────────────────────────────────────────
+  # 담당자가 매일 오전 10시경 발송하므로, 그 뒤에 두 번 확인한다.
+  #   10:30  본 실행
+  #   12:00  보완 실행 (발송이 늦었거나 GitHub 지연에 대비)
+  # 자동 실행은 '최근 7일 중 아직 안 가져온 것 전부'를 처리하므로
+  #   · 이미 가져온 날은 건너뛴다 (중복 없음)
+  #   · 주말·휴일처럼 발송이 없는 날은 조용히 끝난다
+  # ⚠️ GitHub Actions 는 UTC 기준이라 KST 10:30 = UTC 01:30
+  schedule:
+    - cron: '30 1 * * *'    # KST 10:30
+    - cron: '0 3 * * *'     # KST 12:00 (보완)
+
   workflow_dispatch:
     inputs:
       share_url:
@@ -69,7 +81,7 @@ jobs:
       # 0) 목록만 확인하는 진단 모드
       #    어떤 메일이 있는지 제목만 훑어본다. 변환·비용이 발생하지 않는다.
       - name: 발송 메일 목록 확인
-        if: ${{ inputs.mode == '목록만 확인 (변환 안 함)' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == '목록만 확인 (변환 안 함)' }}
         env:
           STIBEE_API_KEY: ${{ secrets.STIBEE_API_KEY }}
           STIBEE_SUBJECT_FILTER: ${{ secrets.STIBEE_SUBJECT_FILTER }}
@@ -86,7 +98,7 @@ jobs:
       #    (메일을 못 찾았는데 웹진 재생성에서 실패해 원인이 가려지는 것을 막기 위함)
       - name: 스티비 발행분 가져오기
         id: fetch
-        if: ${{ inputs.mode != '목록만 확인 (변환 안 함)' }}
+        if: ${{ github.event_name == 'schedule' || inputs.mode != '목록만 확인 (변환 안 함)' }}
         env:
           STIBEE_API_KEY: ${{ secrets.STIBEE_API_KEY }}
           STIBEE_SUBJECT_FILTER: ${{ secrets.STIBEE_SUBJECT_FILTER }}
@@ -113,6 +125,14 @@ jobs:
             fi
             python stibee_mirror.py --email "$EMAIL_ID"
           else
+            # 자동 실행(스케줄)이면 입력값이 비어 있다.
+            # → 최근 7일 중 아직 안 가져온 것 전부로 동작시킨다.
+            if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+              MODE="아직 변환 안 된 것 전부"
+              SINCE=$(TZ=Asia/Seoul date -d '7 days ago' +%Y-%m-%d)
+              echo "[자동 실행] 최근 7일($SINCE 이후) 중 미변환분 처리"
+            fi
+
             # 시작 날짜(선택) 검증
             SINCE_ARG=""
             if [ -n "$SINCE" ]; then
@@ -156,6 +176,10 @@ jobs:
           if git diff --cached --quiet; then
             echo "변경 사항 없음 - 커밋 생략"
           else
-            git commit -m "수동: 스티비 발행분 웹진 반영"
+            if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+              git commit -m "자동: 스티비 발행분 웹진 반영"
+            else
+              git commit -m "수동: 스티비 발행분 웹진 반영"
+            fi
             git push
           fi
