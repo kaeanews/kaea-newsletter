@@ -1,0 +1,165 @@
+{
+  "no": "1001",
+  "date": "2026-10-01",
+  "dow": "목",
+  "summary": "전기차 충전 편의성 강화, 수소 인프라 확대, 노후차 배출가스 저감",
+  "daily": {
+    "상위기관 뉴스": [
+      {
+        "title": "\"전기차 충전, 케이블 꽂기만 하면 된다\"…공공 자동결제 시범 운영",
+        "source": "조선일보",
+        "date": "9.30",
+        "summary": "기후부가 공공 인증체계 기반 전기차 자동 충전·결제(PnC) 시연회를 열고, 10월 중 공공급속충전기 30기에서 시범 운영에 들어감.",
+        "url": "https://biz.chosun.com/policy/policy_sub/2026/09/30/AMCY6ZQJZBC7PFQLS3N23CZN6E/?utm_source=naver&utm_medium=original&utm_campaign=biz"
+      },
+      {
+        "title": "충전 사업수행기관 선정 석 달째 지연…제조사 충전기 판로 막혀",
+        "source": "전기신문",
+        "date": "9.30",
+        "summary": "기후부의 2026년 전기차 충전시설 보조사업 수행기관 선정 발표가 석 달 가까이 지연되면서, 충전기 제조사 판로가 막히고 연내 예산 집행에도 차질이 우려됨.",
+        "url": "https://www.electimes.com/news/articleView.html?idxno=372939"
+      },
+      {
+        "title": "수도권대기환경청, 인천대로 도로개량공사 현장, 전기굴착기 투입",
+        "source": "국제뉴스",
+        "date": "9.30",
+        "summary": "수도권대기환경청이 인천대로 도로개량공사 현장에 수도권 최초로 투입된 23톤급 전기굴착기 운영 현황을 점검함.",
+        "url": "https://www.gukjenews.com/news/articleView.html?idxno=3709956"
+      }
+    ],
+    "자동차 LCA 사업 뉴스": [
+      {
+        "title": "2028년 수소망 직접 연결⋯BMW, 자동차 공장에 수소관 직접 꽂는다",
+        "source": "엠투데이",
+        "date": "10.1",
+        "summary": "BMW가 라이프치히 공장에 수소 파이프라인을 연결해, 2028년부터 도장공정 등 고온 공정의 연료를 천연가스에서 수소로 전환해 생산 단계 탄소 배출을 줄일 계획임. 수소망에 직접 연결되는 세계 첫 자동차 공장이 될 전망임.",
+        "url": "https://www.autodaily.co.kr/news/articleView.html?idxno=600824"
+      }
+    ],
+    "배출 저감사업 뉴스": [
+      {
+        "title": "과천시, 노후 경유차 배출가스 저감장치 합동점검 진행",
+        "source": "브릿지경제",
+        "date": "9.30",
+        "summary": "과천시가 수도권대기환경청 등과 DPF 부착 노후 경유차 합동점검을 실시하고, 기준 초과 차량에 필터 클리닝·소모품 무상 교체를 지원함.",
+        "url": "https://www.viva100.com/article/20260930501179"
+      }
+    ],
+    "전기·수소차 뉴스 - 협회 사업 관련 뉴스": [
+      {
+        "title": "전기차 급속충전기 최근 5년간 1만2531건 고장…올해도 1113건",
+        "source": "머니투데이",
+        "date": "9.30",
+        "summary": "최근 5년간 공공급속충전기 고장이 1만2531건 접수됐으며, 평균 수리기간은 지난해 3.1일에서 올해 4.4일로 늘어남.",
+        "url": "https://www.mt.co.kr/economy/2026/09/30/2026093014483752233"
+      },
+      {
+        "title": "전기차 급속 충전기 141기 내구연한 초과…교체·폐기 계획 없어",
+        "source": "머니투데이",
+        "date": "9.30",
+        "summary": "공공급속충전기 8308기 중 141기가 내구연한 8년을 넘겼지만, 정부는 별도 교체·폐기 계획이 없는 것으로 나타남.",
+        "url": "https://www.mt.co.kr/economy/2026/09/30/2026093011031929867"
+      },
+      {
+        "title": "같은 공공청사 충전인데 295원 vs 590원…경기도 시·군청 전기차 충전요금 최대 2배 차이",
+        "source": "중부일보",
+        "date": "9.30",
+        "summary": "경기도 31개 시·군청사 전기차 충전요금이 비회원 완속 기준 kWh당 295~590원으로 최대 2배 차이가 나는 것으로 나타남. 수원·하남·의왕 등 요금이 비싼 청사는 충전사업자가 1곳뿐이라 이용자 선택지조차 없는 실정임.",
+        "url": "https://www.joongboo.com/news/articleView.html?idxno=363738162"
+      }
+    ],
+    "전기·수소차 뉴스 - 업계 동향": [
+      {
+        "title": "멀리서 보면… 미래 앞당길 견인차",
+        "source": "국민일보",
+        "date": "10.1",
+        "summary": "전기차 100만대 돌파가 자율주행과 관련 산업 성장을 이끌 것이라는 기대를 다룸. 다만 수송 부문 온실가스는 아직 2020년보다 많아 감축 효과는 더 지켜봐야 함.",
+        "url": "https://www.kmib.co.kr/article/view.asp?arcid=9000018785&cp=nv"
+      },
+      {
+        "title": "가까이 보면… 불편·불안에 속 탄다",
+        "source": "국민일보",
+        "date": "10.1",
+        "summary": "전기차 확산의 그늘로 수입차 정비 거점 부족, 배터리 안전 논란, 충전 인프라를 둘러싼 주민 갈등 등을 짚음.",
+        "url": "https://www.kmib.co.kr/article/view.asp?arcid=9000018815&code=11151400&sid1=eco&stg=ws_real"
+      },
+      {
+        "title": "내연→전기차공장 전환 행정절차 단축…반도체 팹 증설 속도↑",
+        "source": "연합뉴스",
+        "date": "10.1",
+        "summary": "정부가 현대차 울산 공장의 전기차 전환에 필요한 인허가 기간을 3년 이상에서 1년 이내로 단축하고, 청정수소 발전 입찰시장도 이달 중 다시 열기로 함.",
+        "url": "https://www.yna.co.kr/view/AKR20260930156400002?input=1195m"
+      },
+      {
+        "title": "뷰익, 한국 시장 공식 진출…첫 신차는 PHEV '엘렉트라 E7'",
+        "source": "데일리한국",
+        "date": "9.30",
+        "summary": "GM 산하 프리미엄 브랜드 뷰익이 한국 시장에 공식 진출하고 첫 모델로 PHEV '엘렉트라 E7'(전기모드 126㎞, 총 주행거리 1000㎞ 이상)을 공개함. 4300만~5400만원대 가격으로 11월부터 판매 예정임.",
+        "url": "https://daily.hankooki.com/news/articleView.html?idxno=1410748"
+      },
+      {
+        "title": "AI∙전동화가 바꾸는 자동차 애프터마켓, 독일 'Automechanika Frankfurt 2026' 참관기",
+        "source": "kotra",
+        "date": "9.30",
+        "summary": "독일 '아우토메카니카 프랑크푸르트 2026'에서 AI 진단, 전기차 배터리·고전압 정비 등 애프터마켓의 전동화·디지털 전환이 주요 화두였음. 한국 기업은 105개사가 참가함.",
+        "url": "https://dream.kotra.or.kr/kotranews/cms/news/actionKotraBoardDetail.do?SITE_NO=3&MENU_ID=110&CONTENTS_NO=1&bbsGbn=245&bbsSn=245&pNttSn=244252"
+      },
+      {
+        "title": "단양군, 가을 행락철 맞아 주요 전기차 충전시설 특별점검 시행",
+        "source": "충북일보",
+        "date": "9.30",
+        "summary": "단양군이 가을 행락철을 맞아 관광지 등 군 관리 전기차 충전시설 25개소 50기를 특별점검함. 고장이나 관리 미흡 시설은 운영사업자에게 정비를 요청하고, 조치 완료 여부까지 사후 점검할 계획임.",
+        "url": "https://www.inews365.com/news/article.html?no=937679"
+      },
+      {
+        "title": "국내 유럽 기업들 \"미국 車보다 불리한 대우 안돼…최혜국 적용 필요\"",
+        "source": "헤럴드경제",
+        "date": "9.30",
+        "summary": "주한유럽상의가 전기차 인증 절차로 출시가 2~3개월 늦어진다며 환경인증·보조금 평가·친환경차 등재 병행을 건의함. 미국차 인증 간소화에 맞춰 유럽차에도 최혜국 대우를 적용해달라고 요구함.",
+        "url": "https://biz.heraldcorp.com/article/10889443?ref=naver"
+      },
+      {
+        "title": "브렉시트 전기차 원산지 규정 갈등…소재업계·완성차업계 정면충돌",
+        "source": "글로벌이코노믹",
+        "date": "10.1",
+        "summary": "EU·영국 배터리 원산지 규정(2027년 시행)을 두고 소재업계는 예정대로 시행을, 완성차업계는 단계적 유예를 요구하며 충돌함. 이 갈등으로 영국·EU 정상회담도 연기됨.",
+        "url": "https://www.g-enews.com/view.php?ud=2026093020594915082bd56fbc3c_1"
+      },
+      {
+        "title": "[하이빔] 전기차 주행거리, 아직도 중요할까?",
+        "source": "오토타임즈",
+        "date": "9.30",
+        "summary": "전기차 경쟁력의 기준이 배터리를 키운 주행거리에서 같은 배터리로 더 멀리 가는 '전비(효율)'로 옮겨가야 한다는 칼럼임.",
+        "url": "http://autotimes.co.kr/detail.php?number=689310&thread=27"
+      }
+    ],
+    "회원사 뉴스": [
+      {
+        "title": "가정용 전기차 충전기도 정수기처럼 구독 서비스",
+        "source": "조선일보",
+        "date": "10.1",
+        "summary": "현대차가 채비와 단독·연립주택용 전기차 충전기 구독 서비스 '마이홈차저'를 출시함. 월 7만3500원(3년 약정)이며, 완성차 업체의 설치·이용 일체형 구독은 국내 최초임.",
+        "url": "https://www.chosun.com/economy/auto/2026/10/01/7WOFRDIJ4JGCZCR42RKELJKV4E/?utm_source=naver&utm_medium=referral&utm_campaign=naver-news"
+      },
+      {
+        "title": "플러그링크, 글로벌 무대서 전기차 충전 기술 경쟁력 알려",
+        "source": "국토일보",
+        "date": "10.1",
+        "summary": "플러그링크가 'Energy Tech Summit Asia 2026' 경진대회에서 국내 기업 중 유일하게 그린 에너지 인프라 부문 파이널리스트로 선정됨. 향후 충전망을 기반으로 VPP·V2G 사업까지 확대할 계획임.",
+        "url": "http://www.ikld.kr/news/articleView.html?idxno=341561"
+      },
+      {
+        "title": "워터, 고속도로 휴게소에 400kW 초급속 충전소 개소",
+        "source": "머니투데이",
+        "date": "9.30",
+        "summary": "워터가 청주휴게소에 400kW 초급속 충전소를 열었으며, 23개 휴게소에 NACS 겸용 충전기 123기를 차례로 구축할 예정임.",
+        "url": "https://www.mt.co.kr/industry/2026/09/30/2026093013313334840"
+      }
+    ]
+  },
+  "global": {},
+  "source": "stibee",
+  "origin": "api",
+  "email_id": 3619303,
+  "subject": "[OCTOBER.1] 한국자동차환경협회 뉴스 모니터링"
+}
