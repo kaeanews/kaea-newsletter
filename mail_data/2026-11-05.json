@@ -1,0 +1,112 @@
+{
+  "no": "1105",
+  "date": "2026-11-05",
+  "dow": "목",
+  "summary": "수소·전기차 동반성장, 충전인프라 확대, 상용차 세대교체",
+  "daily": {
+    "상위기관 뉴스": [
+      {
+        "title": "현대차 \"수소는 혼자 하는 사업 아니다\"…상용차·공급망 동반성장이 해법",
+        "source": "파이낸셜뉴스",
+        "date": "11.4",
+        "summary": "기후에너지환경부가 수소차 보급을 버스·트럭 등 대형 상용차 중심으로 전환해 매년 2000대 이상 보급하고, 수소충전소를 2030년까지 660개로 늘린다는 계획을 WHE 2026에서 밝혔음.",
+        "url": "https://www.fnnews.com/news/202611041738358308"
+      }
+    ],
+    "전기·수소차 뉴스 - 협회 사업 관련 뉴스": [
+      {
+        "title": "최두호 서울시의원 \"전기차 충전기 8만6182기…22만기 목표 대책 필요\"",
+        "source": "메가경제",
+        "date": "11.4",
+        "summary": "서울시가 2026년까지 전기차 충전기 22만기 보급을 목표로 했지만 9월 기준 8만6182기(39.2%)에 그쳐, 서울시의회 행정사무감사에서 급속충전 확대와 생활권 접근성 개선 대책이 필요하다는 지적이 나왔음.",
+        "url": "https://www.megaeconomy.co.kr/news/newsview.php?ncode=1065574950009647"
+      },
+      {
+        "title": "\"수소충전소 67기 시대 시동\"… 충남, 부여에 첫 수소충전소 준공",
+        "source": "신아일보",
+        "date": "11.4",
+        "summary": "충남도가 부여군 첫 수소충전소(하루 1200kg, 승용차 240대·버스 48대 충전 가능)를 준공해 11월 말~12월 초 운영을 시작하며, 2030년까지 도내 수소충전소 67기 구축을 목표로 하고 있음.",
+        "url": "https://www.shinailbo.co.kr/news/articleView.html?idxno=5079888"
+      }
+    ],
+    "전기·수소차 뉴스 - 업계 동향": [
+      {
+        "title": "봉고에서 PV5로···기아 상용차 세대교체 속도",
+        "source": "시사저널e",
+        "date": "11.4",
+        "summary": "기아 전기 PBV PV5의 1~10월 국내 판매가 2만3792대로 봉고(2만6697대)에 근접했고, 10월엔 차이가 16대까지 좁혀지며 기아 상용차의 중심이 소형 트럭에서 다목적 전기차로 옮겨가고 있음.",
+        "url": "https://www.sisajournal-e.com/news/articleView.html?idxno=424785"
+      },
+      {
+        "title": "美 중간선거 휩쓴 '블루 쓰나미'… 배터리·재생에너지 훈풍 기대, 車·조선·철강은 영향 제한적",
+        "source": "조선일보",
+        "date": "11.4",
+        "summary": "미국 중간선거 민주당 압승으로 배터리·재생에너지 업종은 지원 확대가 기대되지만, 관세·연비 규제는 행정부 권한이라 자동차 업종 영향과 전기차 수요 회복은 제한적일 것이라는 전망이 나왔음.",
+        "url": "https://biz.chosun.com/industry/company/2026/11/04/RMU35BSNZ5GPVJXYUX2MKOLGA4/?utm_source=naver&utm_medium=original&utm_campaign=biz"
+      },
+      {
+        "title": "\"CATL이라더니 파라시스\"...벤츠, 배터리 허위 안내한 3천대 배상하면 120억원",
+        "source": "생생비즈플러스",
+        "date": "11.4",
+        "summary": "소비자분쟁조정위원회가 EQE·EQS 배터리 제조사를 CATL로 허위 안내(실제는 파라시스)한 벤츠코리아에 차주 1인당 400만원을 배상하라고 결정했음.",
+        "url": "https://www.livebiz.today/news/articleView.html?idxno=206216"
+      },
+      {
+        "title": "싸도 못 쓰는 중국산 배터리?…세계 각국 규제에 K배터리 '반사이익'",
+        "source": "머니투데이",
+        "date": "11.4",
+        "summary": "미국·대만의 중국산 배터리 제한, EU의 역내 생산 우대, 일본의 사이버보안 인증 의무화 등 각국 규제 강화로 국내 배터리 기업들이 반사이익을 기대하고 있음.",
+        "url": "https://www.mt.co.kr/industry/2026/11/04/2026110413583726074"
+      },
+      {
+        "title": "전기산업연합회, EU 수출 변수 부상한 에코디자인 규제 논의",
+        "source": "일렉트릭파워",
+        "date": "11.4",
+        "summary": "대한전기산업연합회가 포럼을 열고 EU 에코디자인 규정(ESPR)·디지털제품여권(DPP)과 EU 배터리 규정에 따른 국내 산업계 대응 방안을 논의했음.",
+        "url": "https://www.epj.co.kr/news/articleView.html?idxno=39695"
+      },
+      {
+        "title": "에르도안 만난 정의선 … 전기차분야 협력 논의",
+        "source": "매일경제",
+        "date": "11.4",
+        "summary": "정의선 현대차그룹 회장이 방한 중인 에르도안 튀르키예 대통령과 만나 전기차 협력 방안을 논의했음.",
+        "url": "https://www.mk.co.kr/news/business/12196653"
+      },
+      {
+        "title": "정부, 프랑스에 한국산 車 차별 방지 요청…실무그룹 운영키로",
+        "source": "이데일리",
+        "date": "11.4",
+        "summary": "정부가 EU 산업가속화법(IAA)에서 한국산 자동차가 차별받지 않도록 프랑스에 협조를 요청했고, 양국은 자동차 실무그룹을 운영해 프랑스 전기차 보조금 제도와 공급망 협력을 논의하기로 했음.",
+        "url": "https://www.edaily.co.kr/News/Read?newsId=05339846645642440&mediaCodeNo=257&utm_source=naver&utm_medium=referral&utm_campaign=news_syndication&utm_content=original_article"
+      },
+      {
+        "title": "BMW, 2027년 도심까지 레벨2 주행보조 확대⋯iX3·3시리즈 등에 적용",
+        "source": "엠투데이",
+        "date": "11.4",
+        "summary": "BMW가 2027년부터 독일을 시작으로 도심 교차로·회전교차로까지 지원하는 레벨2 주행보조 기능을 iX3·3시리즈 등에 도입할 계획임.",
+        "url": "https://www.autodaily.co.kr/news/articleView.html?idxno=601751"
+      },
+      {
+        "title": "[가보니] 국내 기업 존재감 발휘 'WHE 2026', 수소 캐즘 돌파 분기점 기대",
+        "source": "뉴스웍스",
+        "date": "11.4",
+        "summary": "타타대우모빌리티의 수소엔진 트럭 '맥쎈'이 독일에서 무공해차로 인정받았고, 국내에서도 저공해차 인증과 보조금을 정부와 협의 중임.",
+        "url": "https://www.newsworks.co.kr/news/articleView.html?idxno=901948"
+      }
+    ],
+    "회원사 뉴스": [
+      {
+        "title": "\"전기차 캐즘 때 역발상 투자\"… 창업 3년만에 흑자",
+        "source": "매일경제",
+        "date": "11.4",
+        "summary": "플러그링크가 캐즘 시기 충전기 자산 인수로 창업 3년 만에 흑자전환하고 매출을 321억원까지 키웠으며, 공동주택 완속 충전 모델로 해외 진출도 모색함.",
+        "url": "https://www.mk.co.kr/news/business/12196553"
+      }
+    ]
+  },
+  "global": {},
+  "source": "stibee",
+  "origin": "api",
+  "email_id": 3677095,
+  "subject": "[NOVEMBER.5] 한국자동차환경협회 뉴스 모니터링"
+}
